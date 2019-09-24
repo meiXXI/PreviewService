@@ -1,0 +1,33 @@
+<XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="MY_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
+    <AuditPool>
+        <AuditCreated>
+            <Header AgentName="" AgentVersion="" DeviceID="" Time="" />
+        </AuditCreated>
+        <AuditResource>
+            <Header DeviceID="" Time="" />
+            <ResourceInfo>
+                <ResourceSet Name="Preview">
+                    <Resource>
+                        <Part DocIndex="0" />
+                        <Preview PreviewFileType="PNG">
+                            <FileSpec URL="./page_1.png" />
+                        </Preview>
+                    </Resource>
+                    <Resource>
+                        <Part DocIndex="1" />
+                        <Preview PreviewFileType="PNG">
+                            <FileSpec URL="./page_2.png" />
+                        </Preview>
+                    </Resource>
+                </ResourceSet>
+            </ResourceInfo>
+        </AuditResource>
+    </AuditPool>
+    <ResourceSet Name="RunList" Usage="Input">
+        <Resource>
+            <RunList>
+                <FileSpec URL="./myPdf.pdf" />
+            </RunList>
+        </Resource>
+    </ResourceSet>
+</XJDF>
