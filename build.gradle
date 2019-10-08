@@ -13,7 +13,8 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.cip4.lib.xjdf:xJdfLib'
+	implementation 'org.cip4.lib.xjdf:xJdfLib:+'
+	implementation 'com.google.guava:guava:28.1-jre'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

@@ -1,14 +1,19 @@
 <XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="MY_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
     <AuditPool>
         <AuditCreated>
-            <Header AgentName="" AgentVersion="" DeviceID="" Time="" />
+            <Header AgentName="" AgentVersion="" DeviceID="YM" Time="" />
         </AuditCreated>
     </AuditPool>
     <ResourceSet Name="RunList" Usage="Input">
         <Resource>
             <RunList>
-                <FileSpec URL="./myPdf.pdf" />
+                <FileSpec URL="file-1.pdf" />
             </RunList>
+        </Resource>
+    </ResourceSet>
+    <ResourceSet Name="PreviewGenerationParams">
+        <Resource>
+            <PreviewGenerationParams Resolution="300 72" />
         </Resource>
     </ResourceSet>
 </XJDF>

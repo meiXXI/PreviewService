@@ -1,6 +1,6 @@
 
 # build image
-FROM openjdk:8u222-slim as builder
+FROM openjdk:8u222-slim as java-builder
 
 # create working directory
 RUN mkdir -p /work/src \

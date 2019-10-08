@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for system related REST requests.
  */
 @RestController
+@RequestMapping("/system")
 public class SystemController {
 
 	private final static Version VERSION = new Version();
