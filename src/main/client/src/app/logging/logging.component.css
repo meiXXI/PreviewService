@@ -1,0 +1,20 @@
+table { 
+    table-layout:fixed; 
+}
+
+td { 
+    overflow: hidden;
+    white-space: nowrap;  
+    padding: .1rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: .8rem;
+} 
+
+.log-box {
+    border: #000000 solid 1px;
+    border-radius: 5px;
+    background-color: #efefef;
+    height: 300px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}

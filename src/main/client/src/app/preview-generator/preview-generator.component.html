@@ -1,0 +1,14 @@
+<div class="custom-file">
+    <input type="file" (change)="updateCurrentFile($event)" class="custom-file-input" id="customFile" accept=".pdf">
+    <label class="custom-file-label"
+        for="customFile">{{ currentFile == null ? 'Choose file...' : currentFile.name }}</label>
+</div>
+<div *ngIf="currentFile">
+    Last Modifed: {{ currentFile.lastModified | date : 'yyyy-MM-dd HH:mm:ss' }} <br />
+    Size: {{ currentFile.size | fileSize : 3 }} <br />
+    Type: {{ currentFile.type }}
+</div>
+<div>
+    <button type="button" class="btn btn-primary" (click)="processFile($event)">Process File</button>
+    <button type="button" class="btn btn-secondary" (click)="resetInput($event)">Reset Input</button>
+</div>

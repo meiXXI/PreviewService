@@ -1,0 +1,8 @@
+<div class="log-box">
+    <table class="table table-sm table-borderless">
+        <tr *ngFor="let logEvent of logEvents" class="d-flex">
+            <td class="col-3">{{ logEvent.timeStamp | date : 'yyyy-MM-dd HH:mm:ss.SSS' }}</td>
+            <td class="col-9">{{ logEvent.formattedMessage }}</td>
+        </tr>
+    </table>
+</div>
