@@ -12,7 +12,7 @@ export class VersionComponent implements OnInit {
   version: Version = null;
 
   /**
-   * Constructor.
+   * Custom constructor.
    */
   constructor(
     private http: HttpClient

@@ -1,37 +1,53 @@
 
-# build image
-FROM openjdk:8u222-slim as java-builder
+# build client
+FROM node:current-alpine as client-builder
 
-# create working directory
+RUN mkdir /work \
+    && chown node:node /work \
+    && npm install -g @angular/cli
+
+USER node
+
+COPY --chown=node:node ["src/main/client", "/work/client"]
+
+WORKDIR /work
+
+RUN cd client \
+    && npm install --save-dev @angular/cli@latest \
+    && ng build --prod=true --outputPath=/work/dist --optimization=true
+
+
+# build java project
+FROM openjdk:8-jdk-slim as java-builder
+
 RUN mkdir -p /work/src \
     && mkdir -p /work/gradle \
     && mkdir -p /work/.git
 
+RUN apt-get update && apt-get install -y imagemagick \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY [".git", "/work/.git"]
+COPY ["src", "/work/src"]
+COPY ["gradle", "/work/gradle"]
+COPY ["build.gradle", "settings.gradle", "gradlew", "/work/"]
+
+RUN rm -rf /work/src/main/resources/static
+COPY --from=client-builder /work/dist/*.* /work/src/main/resources/static/
+
 WORKDIR /work
 
-# Source: https://docs.docker.com/v17.12/develop/develop-images/dockerfile_best-practices/
-RUN apt-get update && apt-get install -y \
-        imagemagick \
-    && rm -rf /var/lib/apt/lists/*
-
-# copy files
-COPY .git /work/.git
-COPY src /work/src
-COPY gradle /work/gradle
-COPY build.gradle settings.gradle gradlew /work/
-
-# run build
 RUN ./gradlew build
 
-# productive image
-FROM openjdk:8u222-jre-slim
 
-RUN apt-get update && apt-get install -y \
-        imagemagick \
+# build final image
+FROM openjdk:8-jre-slim
+
+RUN apt-get update && apt-get install -y imagemagick \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /work/build/libs/*.jar /opt/PreviewService.jar
+COPY --from=java-builder /work/build/libs/*.jar /opt/PreviewService.jar
 
 HEALTHCHECK  --interval=10s --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost:4200/status || exit 1
 
-ENTRYPOINT ["java", "-Xmx6g", "-jar","/opt/PreviewService.jar"]
+ENTRYPOINT ["java", "-Xmx4g", "-jar","/opt/PreviewService.jar"]

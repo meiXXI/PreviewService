@@ -51,7 +51,7 @@ public class PreviewServiceImplTest {
 		byte[] png = ReflectionTestUtils.invokeMethod(previewService, "renderPdf", pdf, 300, 300);
 
 		// assert
-		showPngResult(png);
+		// showPngResult(png);
 	}
 
 

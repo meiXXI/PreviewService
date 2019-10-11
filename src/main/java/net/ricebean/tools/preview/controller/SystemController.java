@@ -1,5 +1,7 @@
 package net.ricebean.tools.preview.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/system")
 public class SystemController {
 
+	private static final Logger log = LoggerFactory.getLogger(SystemController.class);
+
 	private final static Version VERSION = new Version();
 
 	/**
@@ -18,6 +22,7 @@ public class SystemController {
 	 */
 	@RequestMapping("/version")
 	public Version getVersion() {
+		log.info("Request Version.");
 		return VERSION;
 	}
 
