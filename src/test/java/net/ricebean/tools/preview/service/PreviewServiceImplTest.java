@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @RunWith(SpringRunner.class)
 public class PreviewServiceImplTest {
@@ -54,6 +55,6 @@ public class PreviewServiceImplTest {
 		byte[] png = ReflectionTestUtils.invokeMethod(previewService, "generatePreview", pdf, 300, 300);
 
 		// assert
-		assertEquals("Size is wrong.", 830697, png.length);
+		assertTrue("Size is wrong.", 750000 < png.length);
 	}
 }
