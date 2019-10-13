@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LogEvent } from './log-event';
+import { interval } from 'rxjs';
 
 @Component({
   selector: 'app-logging',
@@ -23,6 +24,13 @@ export class LoggingComponent implements OnInit {
    */
   ngOnInit() {
     this.loadLogEvents();
+
+    const counter = interval(5000);
+
+    counter.subscribe(n =>
+      this.loadLogEvents()
+    );
+
   }
 
   /**

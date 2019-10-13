@@ -1,14 +1,71 @@
-<div class="custom-file">
-    <input type="file" (change)="updateCurrentFile($event)" class="custom-file-input" id="customFile" accept=".pdf">
-    <label class="custom-file-label"
-        for="customFile">{{ currentFile == null ? 'Choose file...' : currentFile.name }}</label>
+<div class="row">
+    <!-- file selector -->
+    <div class="col-lg">
+        <div class="custom-file">
+            <input type="file" (click)="resetInput()" (change)="updateCurrentFile($event)" class="custom-file-input" id="customFile"
+                accept=".pdf">
+            <label class="custom-file-label"
+                for="customFile">{{ currentFile == null ? 'Choose file...' : currentFile.name }}</label>
+        </div>
+        <div class="metadata">
+            <b>Last Modifed:</b>&nbsp;&nbsp;&nbsp;<span
+                *ngIf="currentFile">{{ currentFile.lastModified | date : 'yyyy-MM-dd HH:mm:ss' }}</span><br />
+            <b>Size:</b>&nbsp;&nbsp;&nbsp;<span *ngIf="currentFile">{{ currentFile.size | fileSize : 2 }} </span><br />
+            <b>Type:</b>&nbsp;&nbsp;&nbsp;<span *ngIf="currentFile">{{ currentFile.type }} </span>
+        </div>
+        <div class="buttons">
+            <button type="button" class="btn btn-outline-primary" (click)="processFile()">Process File</button>
+            &nbsp;
+            <button type="button" class="btn btn-outline-secondary" (click)="resetInput()">Reset Input</button>
+        </div>
+    </div>
+
+    <!-- image preview -->
+    <div class="col-lg">
+        <div class="preview-area">
+            <div class="preview-item">
+                <b>Preview:</b>
+            </div>
+            <div class="preview-item">
+                <span *ngIf="!previewUrl">Not available</span>
+                <a href="#" data-toggle="modal" data-target="#modalPreview"><img class="preview" *ngIf="previewUrl"
+                        [src]="previewUrl" /></a>
+            </div>
+            <div class="preview-item" *ngIf="previewUrl">
+                <div>
+                    <b>Type:</b> image/png <br />
+                    <b>Size:</b> {{ preview.size | fileSize : 2 }} <br /><br />
+
+                    <button class="btn btn-outline-secondary" title="Download Preview"><img
+                            src="assets/download.svg" (click)="downloadPreview()" /></button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div *ngIf="currentFile">
-    Last Modifed: {{ currentFile.lastModified | date : 'yyyy-MM-dd HH:mm:ss' }} <br />
-    Size: {{ currentFile.size | fileSize : 3 }} <br />
-    Type: {{ currentFile.type }}
-</div>
-<div>
-    <button type="button" class="btn btn-primary" (click)="processFile($event)">Process File</button>
-    <button type="button" class="btn btn-secondary" (click)="resetInput($event)">Reset Input</button>
+
+<!-- modal dialog -->
+<div class="modal fade" id="modalPreview" *ngIf="currentFile">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Preview: {{ currentFile.name }}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <img class="modal-preview" [src]="previewUrl" />
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button class="btn btn-outline-secondary" (click)="downloadPreview()">Download</button>&nbsp;
+                <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
 </div>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,14 @@ public class LoggingController extends AppenderBase<ILoggingEvent> {
 
 	@GetMapping
 	public List<ILoggingEvent> getLogEvents() {
-		return events;
+
+		List<ILoggingEvent> result = new ArrayList<>(1000);
+
+		for(int i = events.size(); i > 0 && result.size() < 1000 ; i --) {
+			result.add(events.get(i -1));
+		}
+
+
+		return result;
 	}
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { saveAs } from 'file-saver';
 
 
 @Component({
@@ -11,11 +13,15 @@ export class PreviewGeneratorComponent implements OnInit {
 
   currentFile: File = null;
 
+  previewUrl: SafeUrl = null;
+  preview = null;
+
   /**
    * Default constructor.
    */
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit() {
@@ -24,32 +30,42 @@ export class PreviewGeneratorComponent implements OnInit {
   /**
    * Process the current file.
    */
-  processFile(event) {
+  processFile() {
     if (this.currentFile) {
+
+      // create form
       let formData: FormData = new FormData();
       formData.append('file', this.currentFile, this.currentFile.name);
 
-
-      let httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'multipart/form-data',
-          'Accept': 'application/json'
-        })
-      };
-
-      this.http.post('/preview', formData)
+      // post
+      this.http.post('/preview', formData, { responseType: 'blob' })
         .subscribe(
-          data => console.log(data),
+          data => {
+            this.preview = data;
+
+            let objectURL = URL.createObjectURL(data);       
+            this.previewUrl = this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          },
           error => console.log(error)
         )
     }
   }
 
   /**
+   * Download the current preview.
+   */
+  downloadPreview() {
+    saveAs(this.preview, this.currentFile.name + "-preview.png")
+  }
+
+
+  /**
    * Reset the users input.
    */
-  resetInput(event) {
+  resetInput() {
     this.currentFile = null;
+    this.preview = null;
+    this.previewUrl = null;
   }
 
   /**

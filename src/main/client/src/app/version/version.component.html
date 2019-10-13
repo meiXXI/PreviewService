@@ -1,1 +1,5 @@
-<p *ngIf="version">{{version.version}}</p>
+<div class="version">
+    Version: <span *ngIf="version">{{version.version}} (git: {{version.git}})</span>  <br />
+    Build-Time: <span *ngIf="version">{{version.buildTime}}</span>   
+</div>
+

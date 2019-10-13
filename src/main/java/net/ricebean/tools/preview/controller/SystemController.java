@@ -1,7 +1,9 @@
 package net.ricebean.tools.preview.controller;
 
+import net.ricebean.tools.preview.service.AboutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,7 +16,8 @@ public class SystemController {
 
 	private static final Logger log = LoggerFactory.getLogger(SystemController.class);
 
-	private final static Version VERSION = new Version();
+	@Autowired
+	private AboutService aboutService;
 
 	/**
 	 * Returns the current version details.
@@ -22,26 +25,30 @@ public class SystemController {
 	 */
 	@RequestMapping("/version")
 	public Version getVersion() {
-		log.info("Request Version.");
-		return VERSION;
+		return new Version();
 	}
 
 	/**
 	 * Model class for providing relevant release details.
 	 */
-	private static class Version {
-
-		private String version;
+	private class Version {
 
 		/**
 		 * Default constructor.
 		 */
 		private Version() {
-			this.version = "MyVersion";
 		}
 
 		public String getVersion() {
-			return version;
+			return aboutService.getVersion();
+		}
+
+		public String getGit() {
+			return aboutService.getCommitIdAbbrev();
+		}
+
+		public String getBuildTime() {
+			return aboutService.getBuildTime();
 		}
 	}
 }
