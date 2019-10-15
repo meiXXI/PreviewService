@@ -7,7 +7,9 @@ import { VersionComponent } from './version/version.component';
 import { PreviewGeneratorComponent } from './preview-generator/preview-generator.component';
 
 import { FileSizePipe } from './filesize.pipe';
-import { LoggingComponent } from './logging/logging.component'
+import { LoggingComponent } from './logging/logging.component';
+import { ApiInfoComponent } from './api-info/api-info.component'
+
 
 @NgModule({
   declarations: [
@@ -15,7 +17,8 @@ import { LoggingComponent } from './logging/logging.component'
     VersionComponent,
     PreviewGeneratorComponent,
     FileSizePipe,
-    LoggingComponent
+    LoggingComponent,
+    ApiInfoComponent
   ],
   imports: [
     BrowserModule,

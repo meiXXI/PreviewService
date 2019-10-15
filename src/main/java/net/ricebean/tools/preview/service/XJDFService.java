@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBException;
 public interface XJDFService {
 
 	/**
-	 * Process an XJDF Document.
+	 * Process an XJDF Package.
 	 * @param xjdf The XJDF Document to be processed.
 	 * @return The modified XJDF Document.
 	 */

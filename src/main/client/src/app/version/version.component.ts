@@ -29,7 +29,7 @@ export class VersionComponent implements OnInit {
    * Load the version details.
    */
   loadVersion() {
-    this.http.get<Version>("/system/version")
+    this.http.get<Version>("/version")
       .subscribe((data: Version) => this.version = data);
   }
 

@@ -1,7 +1,7 @@
-<XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="MY_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="My_Preview_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
     <AuditPool>
         <AuditCreated>
-            <Header AgentName="" AgentVersion="" DeviceID="YM" Time="" />
+            <Header DeviceID="DEV_ID" Time="2019-10-15T21:26:07+02:00" />
         </AuditCreated>
     </AuditPool>
     <ResourceSet Name="RunList" Usage="Input">
@@ -11,9 +11,9 @@
             </RunList>
         </Resource>
     </ResourceSet>
-    <ResourceSet Name="PreviewGenerationParams">
+    <ResourceSet Name="PreviewGenerationParams" Usage="Input">
         <Resource>
-            <PreviewGenerationParams Resolution="300 72" />
+            <PreviewGenerationParams Resolution="72 72" />
         </Resource>
     </ResourceSet>
 </XJDF>

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for system related REST requests.
  */
 @RestController
-@RequestMapping("/system")
 public class SystemController {
 
 	private static final Logger log = LoggerFactory.getLogger(SystemController.class);

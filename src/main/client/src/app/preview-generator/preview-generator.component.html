@@ -5,7 +5,7 @@
             <input type="file" (click)="resetInput()" (change)="updateCurrentFile($event)" class="custom-file-input" id="customFile"
                 accept=".pdf">
             <label class="custom-file-label"
-                for="customFile">{{ currentFile == null ? 'Choose file...' : currentFile.name }}</label>
+                for="customFile">{{ currentFile == null ? 'Choose PDF Document...' : currentFile.name }}</label>
         </div>
         <div class="metadata">
             <b>Last Modifed:</b>&nbsp;&nbsp;&nbsp;<span
