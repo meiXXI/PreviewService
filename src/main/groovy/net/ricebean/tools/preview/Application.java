@@ -1,6 +1,5 @@
 package net.ricebean.tools.preview;
 
-import net.ricebean.tools.preview.controller.PreviewController;
 import net.ricebean.tools.preview.service.AboutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

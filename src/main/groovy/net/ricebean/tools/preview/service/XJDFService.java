@@ -12,6 +12,6 @@ public interface XJDFService {
 	 * @param xjdf The XJDF Document to be processed.
 	 * @return The modified XJDF Document.
 	 */
-	byte[] processXJdf(byte[] xjdf) throws JAXBException, Exception;
+	byte[] processXJdfPackage(byte[] xjdf) throws JAXBException, Exception;
 
 }

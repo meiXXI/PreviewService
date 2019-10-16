@@ -21,11 +21,11 @@ public class XJDFController {
 	@Autowired
 	private XJDFService xjdfService;
 
-	@RequestMapping(value = "/xjmf", method = RequestMethod.POST, consumes = "application/vnd.cip4-xjmf+zip", produces = "application/vnd.cip4-xjmf+zip")
-	public byte[] processXJdf(@RequestBody byte[] xjdf) {
-		log.info("A new XJDF Package has been received. Size: " + FileUtils.byteCountToDisplaySize(xjdf.length));
+	@RequestMapping(value = "/xjmf", method = RequestMethod.POST, produces = "application/vnd.cip4-xjmf+zip")
+	public byte[] processXJdf(@RequestBody byte[] bytes) throws Exception {
+		log.info("A new XJDF Package has been received. Size: " + FileUtils.byteCountToDisplaySize(bytes.length));
 
-		return "funzt".getBytes();
+		return xjdfService.processXJdfPackage(bytes);
 	}
 
 }

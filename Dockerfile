@@ -14,7 +14,7 @@ WORKDIR /work
 
 RUN cd client \
     && npm install --save-dev @angular/cli@latest \
-    && ng build --prod=true --outputPath=/work/dist --optimization=true
+    && ng build --prod=true --outputPath=/work/static --optimization=true
 
 
 # build java project
@@ -33,7 +33,7 @@ COPY ["gradle", "/work/gradle"]
 COPY ["build.gradle", "settings.gradle", "gradlew", "/work/"]
 
 RUN rm -rf /work/src/main/resources/static
-COPY --from=client-builder /work/dist/*.* /work/src/main/resources/static/
+COPY --from=client-builder /work/static /work/src/main/resources/static
 
 WORKDIR /work
 
