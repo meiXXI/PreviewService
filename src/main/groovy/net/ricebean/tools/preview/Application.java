@@ -36,7 +36,8 @@ public class Application {
 	@EventListener(ApplicationReadyEvent.class)
 	public void onStartUp() {
 		log.warn(String.format("%s %s has started. (rev: %s)", aboutService.getAppName(), aboutService.getVersion(), aboutService.getCommitIdAbbrev()));
-		log.info("Rendering Engine: " + aboutService.getIMDetails());
+		log.info("Build-Time: " + aboutService.getBuildTime());
+		log.info("PDF Engine: " + aboutService.getIMDetails());
 	}
 
 	/**

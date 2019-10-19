@@ -5,8 +5,14 @@ plugins {
 	id 'com.gorylenko.gradle-git-properties' version '2.2.0'
 }
 
+def gitVersion = "git describe --tags".execute().text
+
+if (gitVersion == "") {
+	gitVersion = "DEVELOPMENT"
+}
+
 group = 'net.ricebean.tools.preview'
-version = '0.0.1-SNAPSHOT'
+version = gitVersion
 sourceCompatibility = '1.8'
 
 repositories {
