@@ -3,8 +3,7 @@
 FROM node:current-alpine as client-builder
 
 RUN mkdir /work \
-    && chown node:node /work \
-    && npm install -g @angular/cli
+    && chown node:node /work
 
 USER node
 
@@ -12,8 +11,8 @@ COPY --chown=node:node ["src/main/client", "/work/client"]
 
 WORKDIR /work/client
 
-RUN npm install --save-dev @angular/compiler @angular/cli @angular/compiler-cli @angular-devkit/build-angular --no-optional
-RUN ng build --prod=true --outputPath=/work/static --optimization=true
+RUN npm install --no-optional
+RUN npx ng build --prod=true --outputPath=/work/static --optimization=true
 
 
 # build java project
