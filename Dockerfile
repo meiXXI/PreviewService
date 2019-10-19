@@ -13,7 +13,7 @@ COPY --chown=node:node ["src/main/client", "/work/client"]
 WORKDIR /work
 
 RUN cd client \
-    && npm install --save-dev @angular/cli@latest \
+    && npm install --save-dev @angular/cli@latest --no-optional \
     && ng build --prod=true --outputPath=/work/static --optimization=true
 
 
