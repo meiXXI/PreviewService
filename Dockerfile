@@ -24,7 +24,7 @@ RUN mkdir -p /work/src \
     && mkdir -p /work/gradle \
     && mkdir -p /work/.git
 
-RUN apt-get update && apt-get install -y imagemagick \
+RUN apt-get update && apt-get install -y imagemagick git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY [".git", "/work/.git"]
