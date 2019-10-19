@@ -10,11 +10,10 @@ USER node
 
 COPY --chown=node:node ["src/main/client", "/work/client"]
 
-WORKDIR /work
+WORKDIR /work/client
 
-RUN cd client \
-    && npm install --save-dev @angular/cli@latest --no-optional \
-    && ng build --prod=true --outputPath=/work/static --optimization=true
+RUN npm install --save-dev @angular/cli@latest --no-optional
+RUN ng build --prod=true --outputPath=/work/static --optimization=true
 
 
 # build java project
