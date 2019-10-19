@@ -4,3 +4,4 @@ src/main/resources/static
 build
 log
 out
+package-lock.json

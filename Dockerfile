@@ -11,7 +11,8 @@ COPY --chown=node:node ["src/main/client", "/work/client"]
 
 WORKDIR /work/client
 
-RUN npm install --no-optional
+RUN npx ng version
+# RUN npm install --no-optional
 RUN npx ng build --prod=true --outputPath=/work/static --optimization=true
 
 
