@@ -24,10 +24,22 @@ public interface AboutService {
 	String getAppName();
 
 	/**
-	 * Retruns the build time of the application.
+	 * Returns the builds commit time of the application.
 	 * @return The applications build time.
 	 */
-	String getBuildTime();
+	String getCommitTime();
+
+	/**
+	 * Returns the number of total commits.
+	 * @return The number of total commits.
+	 */
+	int getCommitCount();
+
+	/**
+	 * Returns the branch name.
+	 * @return The branches name.
+	 */
+	String getBranch();
 
 	/**
 	 * Returns the full commit id of the latest change.

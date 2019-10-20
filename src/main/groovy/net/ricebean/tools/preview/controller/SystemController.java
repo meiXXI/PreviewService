@@ -42,12 +42,16 @@ public class SystemController {
 			return aboutService.getVersion();
 		}
 
-		public String getGit() {
+		public String getRevAbbrev() {
 			return aboutService.getCommitIdAbbrev();
 		}
 
-		public String getBuildTime() {
-			return aboutService.getBuildTime();
+		public String getRevFull() { return aboutService.getCommitId(); }
+
+		public String getCommitTime() {
+			return aboutService.getCommitTime();
 		}
+
+		public String getBranch() { return aboutService.getBranch(); }
 	}
 }

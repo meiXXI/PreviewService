@@ -17,11 +17,17 @@ public class AboutServiceImpl implements AboutService {
 	@Value("${git.build.version}")
 	private String version;
 
-	@Value("${git.build.time}")
-	private String buildTime;
+	@Value("${git.commit.time}")
+	private String commitTime;
 
 	@Value("${git.commit.id}")
 	private String commitId;
+
+	@Value("${git.total.commit.count}")
+	private int commitCount;
+
+	@Value("${git.branch}")
+	private String branch;
 
 	@Value("${git.commit.id.abbrev}")
 	private String commitIdAbbrev;
@@ -59,8 +65,18 @@ public class AboutServiceImpl implements AboutService {
 	}
 
 	@Override
-	public String getBuildTime() {
-		return buildTime;
+	public String getCommitTime() {
+		return commitTime;
+	}
+
+	@Override
+	public int getCommitCount() {
+		return commitCount;
+	}
+
+	@Override
+	public String getBranch() {
+		return branch;
 	}
 
 	@Override

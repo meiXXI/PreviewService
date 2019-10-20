@@ -36,7 +36,9 @@ public class Application {
 	@EventListener(ApplicationReadyEvent.class)
 	public void onStartUp() {
 		log.warn(String.format("%s %s has started. (rev: %s)", aboutService.getAppName(), aboutService.getVersion(), aboutService.getCommitIdAbbrev()));
-		log.info("Build-Time: " + aboutService.getBuildTime());
+		log.info("Branch: " + aboutService.getBranch());
+		log.info("Commit-Time: " + aboutService.getCommitTime());
+		log.info("Total Number Commits: " + aboutService.getCommitCount());
 		log.info("PDF Engine: " + aboutService.getIMDetails());
 	}
 

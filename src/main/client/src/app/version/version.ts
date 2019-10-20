@@ -1,5 +1,7 @@
 export class Version {
     version: string;
-    buildTime: string;
-    git: string;
+    commitTime: string;
+    revAbbrev: string;
+    revFull: string;
+    branch: string;
 }

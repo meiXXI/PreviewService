@@ -12,7 +12,7 @@ COPY --chown=node:node ["src/main/client", "/work/client"]
 WORKDIR /work/client
 RUN ls -l
 
-RUN npm install --no-optional
+RUN npm install
 RUN npx ng version
 RUN npx ng build --prod=true --outputPath=/work/static --optimization=true
 
@@ -37,7 +37,7 @@ COPY --from=client-builder /work/static /work/src/main/resources/static
 
 WORKDIR /work
 
-RUN ./gradlew build
+RUN ./gradlew build --no-daemon
 
 
 # build final image
@@ -48,6 +48,8 @@ RUN apt-get update && apt-get install -y imagemagick \
 
 COPY --from=java-builder /work/build/libs/*.jar /opt/PreviewService.jar
 
-HEALTHCHECK  --interval=10s --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost:4200/status || exit 1
+# HEALTHCHECK  --interval=10s --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost:8080/status || exit 1
+
+EXPOSE 8080
 
 ENTRYPOINT ["java", "-Xmx4g", "-jar","/opt/PreviewService.jar"]
