@@ -1,2 +1,11 @@
+
+
+
+Conclusion:
 content-type cannot be vnd.cip4 etc. in curl
 implementation only of the good case...
+XJDF Implementation ist nicht perfekt:
+Normalerweise ausgelgt für asynchron - dieses hier ist synchron implementiert.
+XJDF ist etwas zu koplex mit dem XJMF - REST API??
+
+Container ist universal einsetzbar (Kubernets)
