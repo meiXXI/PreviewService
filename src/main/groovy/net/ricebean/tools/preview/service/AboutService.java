@@ -27,7 +27,7 @@ public interface AboutService {
 	 * Returns the builds commit time of the application.
 	 * @return The applications build time.
 	 */
-	String getCommitTime();
+	String getReleaseTime();
 
 	/**
 	 * Returns the number of total commits.

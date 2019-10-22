@@ -1,0 +1,13 @@
+.code {
+    border: #999999 solid 1px;
+    border-radius: 5px;
+    background-color: #efefef;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: .9rem;
+    color: #000000;
+}
+
+.row {
+    margin-bottom: 10px;;
+}

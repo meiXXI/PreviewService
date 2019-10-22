@@ -1,6 +1,6 @@
 export class Version {
     version: string;
-    commitTime: string;
+    releaseTime: string;
     revAbbrev: string;
     revFull: string;
     branch: string;

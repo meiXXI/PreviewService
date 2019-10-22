@@ -48,8 +48,8 @@ public class SystemController {
 
 		public String getRevFull() { return aboutService.getCommitId(); }
 
-		public String getCommitTime() {
-			return aboutService.getCommitTime();
+		public String getReleaseTime() {
+			return aboutService.getReleaseTime();
 		}
 
 		public String getBranch() { return aboutService.getBranch(); }

@@ -18,7 +18,7 @@ public class AboutServiceImpl implements AboutService {
 	private String version;
 
 	@Value("${git.commit.time}")
-	private String commitTime;
+	private String releaseTime;
 
 	@Value("${git.commit.id}")
 	private String commitId;
@@ -65,8 +65,8 @@ public class AboutServiceImpl implements AboutService {
 	}
 
 	@Override
-	public String getCommitTime() {
-		return commitTime;
+	public String getReleaseTime() {
+		return releaseTime;
 	}
 
 	@Override
