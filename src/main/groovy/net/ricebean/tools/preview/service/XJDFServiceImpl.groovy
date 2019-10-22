@@ -21,122 +21,127 @@ import java.util.zip.ZipInputStream
 @Component
 class XJDFServiceImpl implements XJDFService {
 
-	private static final Logger log = LoggerFactory.getLogger(XJDFServiceImpl.class)
+    private static final Logger log = LoggerFactory.getLogger(XJDFServiceImpl.class)
+
+    @Autowired
+    private PreviewService previewService
 
 	@Autowired
-	private PreviewService previewService
+	private AboutService aboutService;
 
-	@Override
-	byte[] processXJdfPackage(byte[] pkg) throws IOException, JAXBException {
+    @Override
+    byte[] processXJdfPackage(byte[] pkg) throws IOException, JAXBException {
 
-		// extract files
-		log.info("Extract XJDF Package...")
-		Map<String, byte[]> files = extractPackage(pkg)
+        // extract files
+        log.info("Extract XJDF Package...")
+        Map<String, byte[]> files = extractPackage(pkg)
 
-		// analyze XJMF
-		log.info("Read root.xjmf...")
-		def xjmf = new XmlSlurper().parse(new ByteArrayInputStream(files.get("root.xjmf")))
-		String xjdfUrl = xjmf.CommandSubmitQueueEntry.QueueSubmissionParams.@URL.toString()
+        // analyze XJMF
+        log.info("Read root.xjmf...")
+        def xjmf = new XmlSlurper().parse(new ByteArrayInputStream(files.get("root.xjmf")))
+        String xjdfUrl = xjmf.CommandSubmitQueueEntry.QueueSubmissionParams.@URL.toString()
 
-		// read XJDF
-		log.info("Read " + xjdfUrl + "...")
-		def xjdf = new XmlSlurper().parse(new ByteArrayInputStream(files.get(xjdfUrl)))
-		String artworkUrl = xjdf.ResourceSet.Resource.RunList.FileSpec.@URL.toString()
+        // read XJDF
+        log.info("Read " + xjdfUrl + "...")
+        def xjdf = new XmlSlurper().parse(new ByteArrayInputStream(files.get(xjdfUrl)))
+        String artworkUrl = xjdf.ResourceSet.Resource.RunList.FileSpec.@URL.toString()
 
-		String strResolution = xjdf.ResourceSet.Resource.PreviewGenerationParams.@Resolution.toString()
-		int resX = Integer.parseInt(strResolution.split(" ")[0])
-		int resY = Integer.parseInt(strResolution.split(" ")[1])
+        String strResolution = xjdf.ResourceSet.Resource.PreviewGenerationParams.@Resolution.toString()
+        int resX = Integer.parseInt(strResolution.split(" ")[0])
+        int resY = Integer.parseInt(strResolution.split(" ")[1])
 
-		// process artwork
-		byte[] artwork = files.get(artworkUrl)
-		byte[] preview = previewService.generatePreview(artwork, resX, resY)
+        // process artwork
+        log.info("Generate Preview...")
+        byte[] artwork = files.get(artworkUrl)
+        byte[] preview = previewService.generatePreview(artwork, resX, resY)
 
+        String previewUrl = "preview.png"
+        files.put(previewUrl, preview)
 
-		return new byte[0];
-	}
+        // build response
+        byte[] xjdfBytes = buildResponseXJDF(files.get(xjdfUrl), previewUrl)
+        files.put(xjdfUrl, xjdfBytes)
 
-	/**
-	 * Extract XJDF Package.
-	 * @param pkg The package to be extracted as byte array.
-	 * @return Map of files.
-	 */
-	private static Map<String, byte[]> extractPackage(byte[] pkg) throws IOException {
-		byte[] buffer = new byte[1024]
+        // build package
+		byte[] respPgk = "".getBytes()
 
-		// unzip package
-		ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(pkg))
-		ZipEntry zipEntry = zis.getNextEntry()
+		// return package
+        return respPgk
+    }
 
-		Map<String, byte[]> files = new HashMap<>()
+    /**
+     * Create the response XJDF including the preview.
+     * @param bytesXJdf The origin XJDF Document.
+     * @param previewUrl The preview url.
+     * @return The updated XJDF Document.
+     */
+    byte[] buildResponseXJDF(byte[] bytesXJdf, String previewUrl) {
 
-		while (zipEntry != null) {
-			ByteArrayOutputStream bos = new ByteArrayOutputStream()
+        // parsee XJDF
+        XJDF xjdf = new XJdfParser().parseStream(new ByteArrayInputStream(bytesXJdf))
 
-			int len;
-			while ((len = zis.read(buffer)) > 0) {
-				bos.write(buffer, 0, len)
-			}
-			bos.close()
-			zis.closeEntry()
+        // create audit pool
+        ResourceSet previewSet = new ResourceSet()
+				.withName("Preview")
+				.withUsage(ResourceSet.Usage.OUTPUT)
+                .withResource(new Resource()
+                        .withSpecificResource(new ObjectFactory().createPreview(new Preview()
+								.withPreviewFileType(Preview.PreviewFileType.PNG)
+                                .withFileSpec(new FileSpec()
+                                        .withURL(new URI(new java.net.URI(previewUrl)))
+                                ))
+                        )
+                )
 
-			files.put(zipEntry.getName(), bos.toByteArray())
-			zipEntry = zis.getNextEntry()
-		}
+        AuditResource auditResource = new AuditResource()
+                .withHeader(new Header()
+                        .withDeviceID(aboutService.getAppName())
+						.withAgentName(aboutService.appName)
+						.withAgentVersion(aboutService.getVersion())
+                        .withTime(new DateTime()))
+                .withResourceInfo(
+                        new ResourceInfo()
+                                .withResourceSet(previewSet)
+                );
 
-		zis.closeEntry()
-		zis.close()
+        AuditPool auditPool = xjdf.getAuditPool()
+        auditPool.getAudits().add(auditResource)
 
-		return files
-	}
+        // return response XJDF as byte array
+        return new XJdfParser().parseXJdf(xjdf, true)
+    }
 
+    /**
+     * Extract XJDF Package.
+     * @param pkg The package to be extracted as byte array.
+     * @return Map of files.
+     */
+    private static Map<String, byte[]> extractPackage(byte[] pkg) throws IOException {
+        byte[] buffer = new byte[1024]
 
-	byte[] processXJdfOld(byte[] bytes) throws Exception {
-		XJDF xjdf = new XJdfParser().parseStream(new ByteArrayInputStream(bytes));
+        // unzip package
+        ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(pkg))
+        ZipEntry zipEntry = zis.getNextEntry()
 
-		// get run list
-		ResourceSet runListSet = XjdfUtil.getResourceSet(xjdf, "RunList");
-		RunList runList = (RunList) runListSet.getResource().get(0).getSpecificResource().getValue();
-		Path artworkPath = Paths.get(runList.getFileSpec().getURL().getSourceUri().getRawPath());
-		byte[] pdfArtwork = FileUtils.readFileToByteArray(artworkPath.toFile());
+        Map<String, byte[]> files = new HashMap<>()
 
-		// get preview generation params
-		ResourceSet previewParams = XjdfUtil.getResourceSet(xjdf, "PreviewGenerationParams");
-		PreviewGenerationParams params = (PreviewGenerationParams) previewParams.getResource().get(0).getSpecificResource().getValue();
-		int resX = (int) params.getResolution().getX();
-		int resY = (int) params.getResolution().getY();
+        while (zipEntry != null) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream()
 
-		// render PDF
-		byte[] bytesPreview = previewService.generatePreview(pdfArtwork, resX, resY);
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                bos.write(buffer, 0, len)
+            }
+            bos.close()
+            zis.closeEntry()
 
-		// create tmp file
-		Path pathPreview = Files.createTempFile("preview", ".pdf");
-		Files.write(pathPreview, bytesPreview);
+            files.put(zipEntry.getName(), bos.toByteArray())
+            zipEntry = zis.getNextEntry()
+        }
 
-		// extend audit pool
-		ResourceSet previewSet = new ResourceSet()
-			.withResource(new Resource()
-				.withSpecificResource(new ObjectFactory().createRunList(new RunList()
-					.withFileSpec(new FileSpec()
-						.withURL(new URI(pathPreview.toUri()))
-					))
-				)
-			);
+        zis.closeEntry()
+        zis.close()
 
-
-		AuditResource auditResource = new AuditResource()
-			.withHeader(new Header()
-				.withDeviceID("MyDevice")
-				.withTime(new DateTime()))
-			.withResourceInfo(
-				new ResourceInfo()
-					.withResourceSet( previewSet)
-			);
-
-		AuditPool auditPool = xjdf.getAuditPool();
-		auditPool.getAudits().add(auditResource);
-
-		return new XJdfParser().parseXJdf(xjdf, true);
-	}
-
-
+        return files
+    }
 }

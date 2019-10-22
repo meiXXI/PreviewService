@@ -1,9 +1,6 @@
 export class LogEvent {
     threadName: string;
-    loggerName: string;
-    loggerContextVO: {};
-    level: {};
-    message: string;
+    level: string;
     formattedMessage: string;
     timeStamp: number;
 }
