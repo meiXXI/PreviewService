@@ -8,7 +8,8 @@ import { PreviewGeneratorComponent } from './preview-generator/preview-generator
 
 import { FileSizePipe } from './filesize.pipe';
 import { LoggingComponent } from './logging/logging.component';
-import { ApiInfoComponent } from './api-info/api-info.component'
+import { ApiInfoComponent } from './api-info/api-info.component';
+import { DockerComponent } from './docker/docker.component'
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ApiInfoComponent } from './api-info/api-info.component'
     PreviewGeneratorComponent,
     FileSizePipe,
     LoggingComponent,
-    ApiInfoComponent
+    ApiInfoComponent,
+    DockerComponent
   ],
   imports: [
     BrowserModule,

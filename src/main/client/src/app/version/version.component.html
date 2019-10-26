@@ -1,6 +1,9 @@
 <div class="version">
-    Version: <span *ngIf="version">{{version.version}} (rev: {{version.revAbbrev}})</span>  <br />
-    Release-Time: <span *ngIf="version">{{version.releaseTime}}</span>    <br />
-    Author: Stefan Meissner <i>(<a href="https://github.com/meiXXI" target="_blank">meiXXI</a>)</i>
+    <div class="left">
+        Author: Stefan Meissner <i>(<a href="https://github.com/meiXXI" target="_blank">meiXXI</a>)</i>
+    </div>
+    <div class="right">
+        Release-Time: <span *ngIf="version">{{version.releaseTime}}</span> <br />
+        Version: <span *ngIf="version">{{version.version}} (rev: {{version.revAbbrev}})</span> <br />
+    </div>
 </div>
-

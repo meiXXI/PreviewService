@@ -17,7 +17,7 @@ export class ApiInfoComponent implements OnInit {
    * This method is called on initializiation.
    */
   ngOnInit() {
-    this.cmd = 'curl -i -H "Content-Type: application/octet-stream" --data-binary "@demo.xjmf.zip" ' + location.origin +'/xjmf --output result.xjmf.zip';
+    this.cmd = 'curl -i -H "Content-Type: application/octet-stream" --data-binary "@demo.xjmf.zip" ' + location.origin +'/xjmf --output result.xjmf.zip --insecure';
   }
 
 
