@@ -4,7 +4,7 @@ This Interoperability Conformance Specificaion (ICS) specifies the communication
 
 This ICS document describes in particular the request to the service for a preview generation of a PDF document as well as the response, which also contains the generated preview image.
 
-### Specificaion of Cardinality
+### Specification of Cardinality
 The following table illustrates the notation of consumer and service requirements in ICS tables:
 
 | Notation | Name | Description |
@@ -30,7 +30,7 @@ In general a ZIP package contains a XJMF Message called *root.xjmf', an XJDF Doc
 ## XJMF Message
 Specificaion of the XJMF Message.
 
-### Element: XJDF
+### Element: XJMF
 The XJMF element SHALL be the root element of the XJMF Message.
 
 | Name | Consumer | Service | Description |
@@ -78,6 +78,22 @@ Details about the preview generation response.
 | --- | --- | --- | --- |
 | @URL | r | w | Reference to the XJDF Document within the ZIP Package. |
 
+## XJMF Message
+Specificaion of the XJDF Document containing the preview generation details.
+
+### Element: XJDF
+The XJMF element SHALL be the root element of the XJDF Document.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @JobID | w <br> r? | r? <br> w | The jobs identifier. |
+| @Types | w <br> r | r <br> w | The value SHALL be "Interpreting Rendering PreviewGeneration" | 
+| @ICSVersions | w <br> r | r <br> w | The unique identifier of this ICS Document: "PREVIEW_ICS" |
+| @xmlns | w <br> r | r <br> w | The XJDF 2.0 namespace specificaion: http://www.CIP4.org/JDFSchema_2_0 |
+| AuditPool | r | w   | Container element for metadata as well as feedback from the Service to the Consumer |
+| ResourceSet [@Name="RunList"] | w | r | Reference to the customers artwork PDF |
+| ResourceSet [@Name="PreviewGenerationParams"] | w| r | Paramters regarding to the preview generation. |
+
 ## Appendix
 
 ### Sample Request
@@ -96,7 +112,7 @@ The XJMF Command Message *SubmitQueueEntry* in the request ZIP package in order 
 The XJDF Document in the request ZIP package referenced by the XJDF Command Message *SubmitQueueEntry*. The document contains all information needed for the preview generation.
 
 ```xml
-<XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="My_Preview_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
+<XJDF JobID="42" Types="Interpreting Rendering PreviewGeneration" ICSVersions="PREVIEW_ICS" xmlns="http://www.CIP4.org/JDFSchema_2_0">
     <AuditPool>
         <AuditCreated>
             <Header DeviceID="DEV_ID" Time="2019-10-15T21:26:07+02:00" />
@@ -132,7 +148,7 @@ The XJMF Command Message ReturnQueueEntry in the response ZIP package in order t
 The XJDF Document in the response ZIP package referenced by the XJDF Command Message *ReturnQueueEntry*. The document contains all information regarding to the preview generation.
 
 ```xml
-<xjdf:XJDF ICSVersions="My_Preview_ICS" JobID="42" Types="Interpreting Rendering PreviewGeneration" xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
+<xjdf:XJDF ICSVersions="PREVIEW_ICS" JobID="42" Types="Interpreting Rendering PreviewGeneration" xmlns:xjdf="http://www.CIP4.org/JDFSchema_2_0">
     <xjdf:AuditPool>
         <xjdf:AuditCreated>
             <xjdf:Header DeviceID="PreviewService" Time="2019-11-19T13:32:24Z"/>

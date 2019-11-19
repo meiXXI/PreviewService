@@ -1,5 +1,5 @@
 
-
+XJDF beschreibt nur das Minimum. Alles was nicht explizit verboten ist, kann optional hinzugefügt werden.
 
 Conclusion:
 content-type cannot be vnd.cip4 etc. in curl
@@ -9,3 +9,4 @@ Normalerweise ausgelgt für asynchron - dieses hier ist synchron implementiert.
 XJDF ist etwas zu koplex mit dem XJMF - REST API??
 
 Container ist universal einsetzbar (Kubernets)
+
