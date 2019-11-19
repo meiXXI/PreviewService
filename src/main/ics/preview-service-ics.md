@@ -110,6 +110,43 @@ Container element for a single specific Resource (see XJDF Spec)
 | --- | --- | --- | --- |
 | *Specific Resource* | w <br> r | r <br> w | The specific resource element |
 
+### Specific Resource: RunList
+A RunList Resource references binary data.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| FileSpec | w | r | The reference to the file |
+
+#### Subelement: FileSpec
+Reference to a single file.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @URL | w | r | The reference to the artwork PDF |
+
+### Specific Resource: PreviewGenerationParams
+Details and requirements regarding to the preview generation.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @Resolution | w | r | The required resolution of the preview in x- and y-directions. |
+
+
+### Specific Resource: Preview
+The details and reference to the generated preview image.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @PreviewFileType | r | w | The type of the preview image. Allowed value is "PNG" |
+| FileSpec | r | w | Reference to the preview binary data |
+
+#### Subelement: FileSpec
+Reference to the preview file.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @URL | r | w | The reference to the preview file |
+
 ## Appendix
 
 ### Sample Request
@@ -174,7 +211,6 @@ The XJDF Document in the response ZIP package referenced by the XJDF Command Mes
             <xjdf:ResourceInfo>
                 <xjdf:ResourceSet Name="Preview" Usage="Output">
                     <xjdf:Resource>
-                        <xjdf:Part DocIndex="0 0"/>
                         <xjdf:Preview PreviewFileType="PNG">
                             <xjdf:FileSpec URL="preview.png"/>
                         </xjdf:Preview>
