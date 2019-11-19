@@ -1,4 +1,7 @@
 
+Special Role of Resource, Input, Output and AuditPool
+
+Reqired fiels in Specificaion MÜssen auch in der ICS requried sein, da ICS ein subset ist.
 XJDF beschreibt nur das Minimum. Alles was nicht explizit verboten ist, kann optional hinzugefügt werden.
 ICS is not aimed to be a self-contained document. Conceptional informatoin as well as sidenotes has to be read in parallel to the ICS there (such as data type).
 ISO Nomeclature (SHALL SHOULD etc.)
@@ -17,4 +20,4 @@ XJDF ist etwas zu koplex mit dem XJMF - REST API??
 Sample supports no error handling: its not specified what happens if file is corrupt.
 
 Container ist universal einsetzbar (Kubernets)
-
+Markdown is probably not the best method to write such a document - especially when it will become complexer
