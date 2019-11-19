@@ -42,6 +42,7 @@ The XJMF element SHALL be the root element of the XJMF Message.
 
 ### Element: Header
 The Header element is a container element for information about the parties that are involved in the transaction.
+
 | Name | Consumer | Service | Description |
 | --- | --- | --- | --- |
 | @DeviceID |  w <br> r? | r? <br> w | The devices identifier which generated the parent element. |
