@@ -1,5 +1,7 @@
 
 XJDF beschreibt nur das Minimum. Alles was nicht explizit verboten ist, kann optional hinzugefügt werden.
+ICS is not aimed to be a self-contained document. Conceptional informatoin as well as sidenotes has to be read in parallel to the ICS there.
+ISO Nomeclature (SHALL SHOULD etc.)
 
 Conclusion:
 content-type cannot be vnd.cip4 etc. in curl

@@ -94,6 +94,22 @@ The XJMF element SHALL be the root element of the XJDF Document.
 | ResourceSet [@Name="RunList"] | w | r | Reference to the customers artwork PDF |
 | ResourceSet [@Name="PreviewGenerationParams"] | w| r | Paramters regarding to the preview generation. |
 
+### Element: ResourceSet
+Container element for similar resources.
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| @Name | w <br> r | r <br> w | The name of the Specific Resource (see XJDF Spec.) |
+| @Usage | w <br> r | r <br> w | The usage of the Resource (see XJDF Spec.) <br> Valid values SHALL be "Input" and "Output" |
+| Resource | w <br> r | r <br> w | Container for the specific Resource |
+
+### Element: Resource
+Container element for a single specific Resource (see XJDF Spec)
+
+| Name | Consumer | Service | Description |
+| --- | --- | --- | --- |
+| *Specific Resource* | w <br> r | r <br> w | The specific resource element |
+
 ## Appendix
 
 ### Sample Request
