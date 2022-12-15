@@ -1,0 +1,5 @@
+name: Main Workflow (main)
+
+on:
+  push:
+    branches: [ main ]
