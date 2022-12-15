@@ -1,55 +1,70 @@
+# build webapp
+FROM node:18 as webapp-builder
 
-# build client
-FROM node:current-alpine as client-builder
+ARG VERSION=0.0.0
 
-RUN apk add --no-cache git \
-    && mkdir /work \
-    && chown node:node /work
+COPY ["src/main/webapp", "/home/node/app"]
+WORKDIR /home/node/app
 
-USER node
+RUN yarn install
+RUN yarn version --new-version ${VERSION}
+RUN yarn build
 
-COPY --chown=node:node ["src/main/client", "/work/client"]
-WORKDIR /work/client
-RUN ls -l
+# create base image
+FROM amazoncorretto:17 AS base
 
-RUN npm install
-RUN npx ng version
-RUN npx ng build --prod=true --outputPath=/work/static --optimization=true
+ARG COMMIT_SHA
+ARG COMMIT_SHORT_SHA
+ARG PIPELINE_ID
+ARG PIPELINE_IID
+ARG USER_NAME
 
+ENV COMMIT_SHA=${COMMIT_SHA}
+ENV COMMIT_SHORT_SHA=${COMMIT_SHORT_SHA}
+ENV PIPELINE_ID=${PIPELINE_ID}
+ENV PIPELINE_IID=${PIPELINE_IID}
+ENV USER_NAME=${USER_NAME}
 
-# build java project
-FROM openjdk:8-jdk-slim as java-builder
+ENV LANG=en_US.utf-8
+ENV LC_ALL=en_US.UTF-8
 
-RUN mkdir -p /work/src \
-    && mkdir -p /work/gradle \
-    && mkdir -p /work/.git
+RUN yum -y install ImageMagick shadow-utils.x86_64 \
+    && yum clean all \
+    && rm -rf /var/cache/yum
 
-RUN apt-get update && apt-get install -y imagemagick git \
-    && rm -rf /var/lib/apt/lists/*
+RUN groupadd -g 1000 meixxi && useradd -u 1000 -g meixxi -s /bin/sh meixxi
 
-COPY [".git", "/work/.git"]
-COPY ["src", "/work/src"]
-COPY ["gradle", "/work/gradle"]
-COPY ["build.gradle", "settings.gradle", "gradlew", "/work/"]
+# compile and test
+FROM base AS java-builder
 
-RUN rm -rf /work/src/main/resources/static
-COPY --from=client-builder /work/static /work/src/main/resources/static
+RUN mkdir -p /work/.gradle && chown -R meixxi:meixxi /work
+
+COPY --chown=meixxi:meixxi ["src", "/work/src"]
+COPY --chown=meixxi:meixxi ["gradle", "/work/gradle"]
+COPY --chown=meixxi:meixxi ["gradlew", "build.gradle", "settings.gradle", "/work/"]
+
+COPY --chown=meixxi:meixxi --from=webapp-builder ["/home/node/app/build", "/work/src/main/resources/static"]
+
+USER meixxi
 
 WORKDIR /work
 
-RUN ./gradlew build --no-daemon
+ARG VERSION=0.0.0
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+ARG AWS_SESSION_TOKEN
 
+RUN ./gradlew -i build -PprojectVersion=${VERSION} --no-daemon
+RUN rm /work/build/libs/*-plain.jar
 
-# build final image
-FROM openjdk:8-jre-slim
+# create final image
+FROM base
 
-RUN apt-get update && apt-get install -y imagemagick \
-    && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /app/data && chown -R meixxi:meixxi /app
+COPY --from=java-builder --chown=meixxi:meixxi ["/work/build/libs/*.jar", "/app/preview-service.jar"]
 
-COPY --from=java-builder /work/build/libs/*.jar /opt/PreviewService.jar
+USER meixxi
 
-# HEALTHCHECK  --interval=10s --timeout=3s CMD wget --quiet --tries=1 --spider http://localhost:8080/status || exit 1
+ENTRYPOINT ["java", "-Xmx4g", "-jar", "-Dspring.profiles.active=prod", "/app/preview-service.jar"]
 
 EXPOSE 8080
-
-ENTRYPOINT ["java", "-Xmx4g", "-jar","/opt/PreviewService.jar"]

@@ -1,5 +1,0 @@
-Versionierung
-Demo PDF für Manuellen Preview Erstellung anbinden
-Texte Überarbeiten
-Email an Kevin
-Auto-Deployment docker hub -> Cloud Run
