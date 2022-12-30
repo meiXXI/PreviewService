@@ -1,21 +1,21 @@
 package net.meixxi.service.preview.service;
 
-import com.google.common.hash.Hashing;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class XJDFServiceImplTest {
 
 	@Mock
@@ -48,15 +48,15 @@ public class XJDFServiceImplTest {
 		Mockito.verify(aboutServiceMock, Mockito.times(4)).getVersion();
 
 		System.out.println(result.length);
-		assertTrue("Result is 300,000 Bytes", result.length > 300000);
+		assertTrue(result.length > 300000, "Result is 300,000 Bytes");
 
 		Map<String, byte[]> files = ReflectionTestUtils.invokeMethod(xjdfService, "extractPackage", result);
-		assertEquals("Number of files is wrong.", 4, files.size());
+		assertEquals(4, files.size(), "Number of files is wrong.");
 
-		assertTrue("Preview File is missing", files.containsKey("preview.png"));
-		assertTrue("PDF File is missing", files.containsKey("file-1.pdf"));
-		assertTrue("XJDF File is missing", files.containsKey("preview.xjdf"));
-		assertTrue("XJMF File is missing", files.containsKey("root.xjmf"));
+		assertTrue(files.containsKey("preview.png"), "Preview File is missing");
+		assertTrue(files.containsKey("file-1.pdf"), "PDF File is missing");
+		assertTrue(files.containsKey("preview.xjdf"), "XJDF File is missing");
+		assertTrue(files.containsKey("root.xjmf"), "XJMF File is missing");
 	}
 
 	@Test
@@ -75,6 +75,6 @@ public class XJDFServiceImplTest {
 		System.out.println(new String(result));
 		String actual = new String(result).replaceAll("20([0-9]{2}.){6}", "xxxx");
 
-		assertEquals("XJMF is wrong.", expected, Hashing.sha256().hashString(actual, StandardCharsets.UTF_8).toString());
+		assertEquals(expected, result,"XJMF is wrong.");
 	}
 }

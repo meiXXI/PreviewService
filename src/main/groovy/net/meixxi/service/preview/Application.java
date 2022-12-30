@@ -33,23 +33,6 @@ public class Application {
 	 */
 	@EventListener(ApplicationReadyEvent.class)
 	public void onStartUp() {
-		log.warn(String.format("%s %s has started. (rev: %s)", aboutService.getAppName(), aboutService.getVersion(), aboutService.getCommitIdAbbrev()));
-		log.info("Branch: " + aboutService.getBranch());
-		log.info("Release-Time: " + aboutService.getReleaseTime());
-		log.info("Total Number Commits: " + aboutService.getCommitCount());
-		log.info("PDF Engine: " + aboutService.getIMDetails());
+		log.warn(String.format("%s %s has started. (rev: %s)", aboutService.getAppName(), aboutService.getVersion(), aboutService.getCommitId()));
 	}
-
-	/**
-	 * Read git properties.
-	 */
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
-		PropertySourcesPlaceholderConfigurer propsConfig = new PropertySourcesPlaceholderConfigurer();
-		propsConfig.setLocation(new ClassPathResource("git.properties"));
-		propsConfig.setIgnoreResourceNotFound(true);
-		propsConfig.setIgnoreUnresolvablePlaceholders(true);
-		return propsConfig;
-	}
-
 }
