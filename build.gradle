@@ -1,7 +1,7 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-	id 'groovy'
+	id 'java'
 	id 'org.springframework.boot' version '3.0.0'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
@@ -32,9 +32,15 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
 	implementation 'org.cip4.lib.xjdf:xJdfLib:+'
-	implementation 'org.codehaus.groovy:groovy:+'
-	implementation 'org.codehaus.groovy:groovy-xml:+'
+	implementation 'org.apache.pdfbox:pdfbox:3.+'
+	implementation 'org.apache.pdfbox:io:3.+'
+	implementation 'net.logstash.logback:logstash-logback-encoder:+'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
 }
