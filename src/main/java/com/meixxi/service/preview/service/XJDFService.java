@@ -12,4 +12,5 @@ public interface XJDFService {
 	 */
 	byte[] processXJdfPackage(byte[] xjdf) throws Exception;
 
+	byte[] generateSubmitQueueEntryTestPackage() throws Exception;
 }

@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -68,19 +70,19 @@ public class XJDFServiceImplTest {
 	}
 
 	@Test
-	public void buildXJmfReturnQueueEntry() throws Exception {
+	public void generateSubmitQueueEntryTestPackage() throws Exception {
 
 		// arrange
-		final String expected = "389a8b35c9dbc3d1205a34b3259a303fe44179cc0889d0a5ab0d0e43d0914c7a";
 
 		// act
-		byte[] result = ReflectionTestUtils.invokeMethod(xjdfService, "buildXJmfReturnQueueEntry", "myUrl");
+		byte[] result = xjdfService.generateSubmitQueueEntryTestPackage();
 
 		// assert
-		System.out.println(new String(result));
-//		String actual = new String(result).replaceAll("20([0-9]{2}.){6}", "xxxx");
+		Map<String, byte[]> files = extractPackage(result);
+		assertEquals(3, files.size(), "Number of files is wrong.");
 
-		// assertEquals(expected, result,"XJMF is wrong.");
+		assertTrue(files.containsKey("artwork/tudublin.pdf"), "Preview File is missing");
+		assertTrue(files.containsKey("root.xjmf"), "XJMF File is missing");
 	}
 
 	/**

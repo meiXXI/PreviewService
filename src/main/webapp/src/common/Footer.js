@@ -12,7 +12,8 @@ class Footer extends React.Component {
         super(props);
 
         this.state = {
-            version: null
+            version: null,
+            interval: null
         };
 
         this.updateVersion = this.updateVersion.bind(this);
@@ -22,13 +23,27 @@ class Footer extends React.Component {
      * ReactJS: Method is invoked immediately after a component is mounted.
      */
     componentDidMount() {
+        // prevent second call
+        if (this.isCalled) {
+            return;
+        }
+        this.isCalled = true;
 
         // trigger continuous updates
         this.updateVersion();
 
-        this.interval = setInterval(() => {
+        var interval = setInterval(() => {
             this.updateVersion();
-        }, 5000);
+        }, 15000);
+
+        this.setState({ interval: interval });
+    }
+
+    /**
+     * ReactJS: Method is called when a component is being removed from the DOM.
+     */
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
     }
 
     /**
@@ -58,39 +73,32 @@ class Footer extends React.Component {
      */
     render() {
 
-
-        // define content
-        var versionDetails = null;
-
-        if (this.state.version) {
-            versionDetails = (
-                <div>
-                    <div className="row row-cols-2">
-                        <div className="col">
-                            <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small>
-                        </div>
-                        <div className="col text-end">
-                            <small>Web-Client: v{packageJson.version}</small>
-                        </div>
-                    </div>
-                </div>
-            );
-        } 
-        
-
-        // final output
         return (
-            <div className="footer fixed-bottom bg-dark p-2 text-light">
-                <div className="container-fluid">
-                    <div className="row row-cols-2">
-                        <div className="col">
-                            <small>Preview Service</small>
-                        </div>
-                        <div className="col text-end">
-                            <small>Apache License 2.0</small>
+            <div className="bg-white">
+
+                <div>
+                    <div className='bg-dark p-2 text-light'>
+                        <div className="container-fluid">
+                            <div className="row row-cols-2">
+                                <div className="col">
+                                    <small>Author: Stefan Meissner <i>(<a className='text-light' href="https://www.linkedin.com/in/meiXXI">meiXXI</a>)</i></small>
+                                </div>
+                                <div className="col text-end">
+                                    <small>Apache License 2.0</small>
+                                </div>
+                            </div>
+                            <div>
+                                <div className="row row-cols-2">
+                                    <div className="col">
+                                        PhD Candidate at TU Dublin
+                                    </div>
+                                    <div className="col text-end">
+                                        <small>{this.state.version ? <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small> : 'n. a.'} · webapp: v{packageJson.version}</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    { versionDetails ? versionDetails : '' }
                 </div>
             </div>
         );

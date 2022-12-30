@@ -5,6 +5,7 @@ import org.cip4.lib.xjdf.XJmfMessage;
 import org.cip4.lib.xjdf.ZipPackage;
 import org.cip4.lib.xjdf.schema.*;
 import org.cip4.lib.xjdf.type.URI;
+import org.cip4.lib.xjdf.type.XYPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,5 +88,43 @@ public class XJDFServiceImpl implements XJDFService {
         }
 
         return null;
+    }
+
+    @Override
+    public byte[] generateSubmitQueueEntryTestPackage() throws Exception {
+
+        // load artwork
+        byte[] artwork = XJDFServiceImpl.class
+                .getResourceAsStream("/com/meixxi/service/preview/service/tudublin.pdf")
+                .readAllBytes();
+        URI artworkUri = new URI("artwork/tudublin.pdf");
+
+        // create XJDF Document
+        String jobId = UUID.randomUUID().toString().substring(0, 6);
+
+        XJdfDocument xJdfDocument = new XJdfDocument(jobId, "PreviewGeneration");
+        xJdfDocument.addResourceSet(
+                new RunList().withFileSpec(new FileSpec().withURL(artworkUri)),
+                ResourceSet.Usage.INPUT
+        );
+        xJdfDocument.addResourceSet(
+                new PreviewGenerationParams().withResolution(new XYPair(72f, 72f)),
+                ResourceSet.Usage.INPUT
+        );
+        URI xJdfDocumentUri = new URI(jobId + ".xjdf");
+
+        // create CommandSubmitQueueEntry XJMF Message
+        XJmfMessage xJmfMessage = new XJmfMessage();
+        xJmfMessage.addMessage(
+                new CommandSubmitQueueEntry().withQueueSubmissionParams(new QueueSubmissionParams().withURL(xJdfDocumentUri))
+        );
+
+        // create and return zip package
+        return new ZipPackage.Builder()
+                .withXJmfRoot(xJmfMessage)
+                .withXJdfDocument(xJdfDocumentUri, xJdfDocument)
+                .withFile(artworkUri, artwork)
+                .build()
+                .packageFiles();
     }
 }

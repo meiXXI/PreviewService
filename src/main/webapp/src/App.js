@@ -5,6 +5,9 @@ import Footer from './common/Footer';
 
 import Introduction from './main/Introduction';
 import ManualPreviewGeneration from './main/ManualPreviewGeneration';
+import AutomatedPreviewGenerationXJdf from './main/AutomatedPreviewGenerationXJdf';
+import AutomatedPreviewGenerationProprietary from './main/AutomatedPreviewGenerationProprietary';
+import ServerLogging from './common/ServerLogging';
 
 class App extends React.Component {
 
@@ -13,17 +16,28 @@ class App extends React.Component {
    */
   render() {
 
-        // return main page
-        return (
-          <div>
-            <Header></Header>
-            
-            <Introduction/>
-            <ManualPreviewGeneration />
+    // return main page
+    return (
+      <div className='h-100 d-flex flex-column'>
+        <div>
+          <Header></Header>
+        </div>
 
-            <Footer></Footer>
-          </div>
-        );
+        <div className='flex-fill overflow-auto'>
+          <Introduction />
+          <ManualPreviewGeneration />
+          <AutomatedPreviewGenerationXJdf />
+          <AutomatedPreviewGenerationProprietary />
+        </div>
+
+        <div>
+          <ServerLogging />
+        </div>
+        <div>
+          <Footer></Footer>
+        </div>
+      </div>
+    );
 
   }
 

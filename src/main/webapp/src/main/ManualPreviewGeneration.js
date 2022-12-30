@@ -51,7 +51,6 @@ class ManualPreviewGeneration extends React.Component {
         })
             .then((response) => response.arrayBuffer())
             .then((bytes) => {
-
                 const preview = new Blob([bytes], { type: "image/png" });
                 const previewUrl = window.URL.createObjectURL(preview);
 
@@ -66,7 +65,7 @@ class ManualPreviewGeneration extends React.Component {
      * Handler to download the preview.
      */
     handleDownloadPreview() {
-        var file = new File([this.state.preview], "preview-" + moment().format("YYYYMMDD-HHmmss" + ".png"));
+        var file = new File([this.state.preview], "preview-" + (moment().format("YYYYMMDD-HHmmss") + ".png"));
         saveAs(file);
     }
 
@@ -88,7 +87,7 @@ class ManualPreviewGeneration extends React.Component {
      * Source: Arainty https://stackoverflow.com/a/20732091
      */
     humanFileSize(size) {
-        var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+        var i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
         return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
     }
 
@@ -148,7 +147,7 @@ class ManualPreviewGeneration extends React.Component {
                         </div>
                         <div className="col-3">
                             {
-                                this.state.previewUrl ? <div><img className='w-100 border' src={this.state.previewUrl} /></div> : <div className='text-muted'><i>not availabe</i></div>
+                                this.state.previewUrl ? <div><img className='w-100 border' src={this.state.previewUrl} alt="" /></div> : <div className='text-muted'><i>not availabe</i></div>
                             }
                         </div>
                         <div className="col-2">

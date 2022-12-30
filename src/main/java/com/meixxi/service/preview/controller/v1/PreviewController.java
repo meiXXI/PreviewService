@@ -1,6 +1,7 @@
 package com.meixxi.service.preview.controller.v1;
 
 import com.meixxi.service.preview.service.PreviewService;
+import com.meixxi.service.preview.util.DimensionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,21 @@ public class PreviewController {
 	@PostMapping(value = "", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public @ResponseBody byte[] process(
 		@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+		long startTime = System.currentTimeMillis();
 
-		// generate preview
-		log.info("File '" + file.getOriginalFilename() + "' has been received for preview generation. Size: " + file.getSize());
+		log.info("File '{}' received - {}",
+				file.getOriginalFilename(),
+				DimensionUtil.bytes2readable(file.getSize())
+		);
+
 		byte[] preview = previewService.generatePreview(file.getBytes(), 72);
-		log.info("Prepare response. Size: " + preview.length);
 
-		// return preview
+		log.info("Preview '{}' completed - {} ({} ms)",
+				file.getOriginalFilename(),
+				DimensionUtil.bytes2readable(preview.length),
+				System.currentTimeMillis() - startTime
+		);
+
 		return preview;
 	}
 }

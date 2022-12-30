@@ -1,16 +1,10 @@
 <configuration>
-    <springProfile name="prod">
-        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder" >
-                <customFields>{"service":"@appname@"}</customFields>
-                <version>@version@</version>
-            </encoder>
-        </appender>
-        <root level="INFO">
-            <appender-ref ref="STDOUT" />
-        </root>
-    </springProfile>
-    <springProfile name="!prod">
-        <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    </springProfile>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <appender name="LoggingController" class="com.meixxi.service.preview.controller.v1.LoggingController"/>
+
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="LoggingController"/>
+    </root>
 </configuration>

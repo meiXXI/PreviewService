@@ -68,6 +68,6 @@ COPY --from=java-builder --chown=meixxi:meixxi ["/work/build/libs/*.jar", "/app/
 
 USER meixxi
 
-ENTRYPOINT ["java", "-Xmx4g", "-jar", "-Dspring.profiles.active=prod", "/app/preview-service.jar"]
+ENTRYPOINT ["java", "-Xmx4g", "-jar", "/app/preview-service.jar"]
 
 EXPOSE 8080

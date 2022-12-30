@@ -4,13 +4,80 @@ import React from 'react';
 class Header extends React.Component {
 
     /**
+     * Custom constructor.
+     * @param {*} props 
+     */
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            status: null,
+            interval: null
+        };
+
+        this.updateStatus = this.updateStatus.bind(this);
+    }
+
+    /**
+     * ReactJS: Method is invoked immediately after a component is mounted.
+     */
+    componentDidMount() {
+        // prevent second call
+        if (this.isCalled) {
+            return;
+        }
+        this.isCalled = true;
+
+        // trigger continuous updates
+        this.updateStatus();
+
+        if (this.state.interval === null) {
+            var interval = setInterval(() => {
+                this.updateStatus();
+            }, 2500);
+        }
+
+        this.setState({ interval: interval });
+    }
+
+    /**
+     * ReactJS: Method is called when a component is being removed from the DOM.
+     */
+    componentWillUnmount() {
+        clearInterval(this.state.interval);
+    }
+
+
+    /**
+     * Update version
+     */
+    updateStatus() {
+
+        fetch("/status")
+            .then(response => {
+                if (200 === response.status) {
+                    return response.json();
+                } else {
+                    return null;
+                }
+            })
+            .then(status => {
+
+                this.setState({
+                    status: status
+                });
+            });
+    }
+
+
+    /**
      * Return HTML snippet
      */
     render() {
 
         // final output
         return (
-            <div className='fixed-top'>
+            <div>
                 <nav className="navbar bg-light">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="/">Preview Service</a>
@@ -34,18 +101,32 @@ class Header extends React.Component {
                                         &nbsp;
                                     </li>
                                     <li className="nav-item">
-                                    <a className="nav-link active" aria-current="page" href="https://www.tudublin.ie">TU Dublin</a>
+                                        <a className="nav-link active" aria-current="page" href="https://www.tudublin.ie">TU Dublin</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </nav>
-                <div className='text-muted ms-3 mt-1'>
-                    <small>
-                        Author: Stefan Meissner (<a href="https://www.linkedin.com/in/meiXXI"><i>meiXXI</i></a>) <br />
-                        PhD Candidate at TU Dublin
-                    </small>
+                <div className='container-fluid'>
+                    <div className='row'>
+                        <div className='col-6'>
+                            <i><small className='text-muted'>
+                                <span className='me-2'>Status: {this.state.status ? this.state.status.status : 'n. a.'}</span>
+                                ·
+                                <span className='mx-2'>Hostname: {this.state.status ? this.state.status.hostname : 'n. a.'}</span>
+                                ·
+                                <span className='mx-2'>Instance Id: {this.state.status ? this.state.status.instanceId : 'n. a.'}</span>
+                            </small></i>
+                        </div>
+                        <div className='col-6 text-end'>
+                            <i><small className='text-muted'>
+                                <span className='mx-2'>Duration: {this.state.status ? this.state.status.durationReadable : 'n. a.'}</span>
+                                ·
+                                <span className='mx-2'>Start Time: {this.state.status ? this.state.status.startTimeReadable : 'n. a.'}</span>
+                            </small></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

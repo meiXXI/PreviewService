@@ -1,6 +1,7 @@
 package com.meixxi.service.preview.controller.v1;
 
 import com.meixxi.service.preview.service.XJDFService;
+import com.meixxi.service.preview.util.DimensionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,26 @@ public class XJDFController {
 	@Autowired
 	private XJDFService xjdfService;
 
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = "application/vnd.cip4-xjmf+zip")
+	@RequestMapping(method = RequestMethod.POST, produces = "application/vnd.cip4-xjmf+zip")
 	public byte[] processXJdf(@RequestBody byte[] bytes) throws Exception {
-		log.info("A new XJDF Package has been received. Size: " + bytes.length);
+		log.info("A new XJDF Package has been received. Size: {}", DimensionUtil.bytes2readable(bytes.length));
 
 		return xjdfService.processXJdfPackage(bytes);
 	}
 
+	@RequestMapping(value = "/example", method = RequestMethod.GET, produces = "application/vnd.cip4-xjmf+zip")
+	public byte[] generateExampleXJmf() throws Exception {
+		long startTime = System.currentTimeMillis();
+
+		log.info("Generate an example XJMF Package...");
+
+		byte[] example = xjdfService.generateSubmitQueueEntryTestPackage();
+
+		log.info("XJMF Example Package has been generated - {} ({} ms)",
+				DimensionUtil.bytes2readable(example.length),
+				System.currentTimeMillis() - startTime
+		);
+
+		return example;
+	}
 }

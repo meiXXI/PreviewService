@@ -1,5 +1,5 @@
 app:
-  name: meiXXI Preview Service
+  name: Preview Service
   version: @version@
   buildtime: @buildtime@
 
