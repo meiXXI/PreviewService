@@ -12,8 +12,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/v1/logging")
 public class LoggingController extends AppenderBase<ILoggingEvent> {
-
-
 	private final static int MAX_ITEMS = 250;
 	private final static List<LogEvent> events = new ArrayList<>(MAX_ITEMS);
 

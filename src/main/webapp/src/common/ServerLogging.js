@@ -27,21 +27,16 @@ class ServerLogging extends React.Component {
      * ReactJS: Method is invoked immediately after a component is mounted.
      */
     componentDidMount() {
-        // prevent second call
-        if (this.isCalled) {
-            return;
-        }
-        this.isCalled = true;
 
         // trigger continuous updates
         this.updateServerLogs();
 
-        if (this.state.interval === null) {
-            var interval = setInterval(() => {
+        if (!this.interval && this.state.interval === null) {
+            this.interval = setInterval(() => {
                 this.updateServerLogs();
-            }, 5000);
+            }, 2150);
 
-            this.setState({ interval: interval });
+            this.setState({ interval: this.interval });
         }
     }
 
@@ -78,10 +73,13 @@ class ServerLogging extends React.Component {
                 // update logs
                 this.setState({
                     logEvents: logEvents
+                }, () => {
+                    // scrol to bottom
+                    this.refLogs.current.scrollTop = this.refLogs.current.scrollHeight
                 });
 
-                // scrol to top
-                this.refLogs.current.scrollTop = 0;
+                
+                
             });
     }
 
@@ -89,6 +87,10 @@ class ServerLogging extends React.Component {
      * Return HTML snippet
      */
     render() {
+
+        // prepare log events
+        const logEvents = this.state.logEvents ? this.state.logEvents.reverse() : []
+
 
         // final output
         return (
@@ -112,14 +114,29 @@ class ServerLogging extends React.Component {
                                 <div className="col-12">
                                     <table className="table table-sm table-hover table-responsive table-borderless">
                                         <tbody>
-                                            {this.state.logEvents &&
-                                                this.state.logEvents.map((logEvent, idx) => {
+                                            {logEvents.map((logEvent, idx) => {
+
+                                                    // define text color
+                                                    var textColor;
+
+                                                    switch (logEvent.level) {
+                                                        case "INFO":
+                                                            textColor = "text-white";
+                                                            break;
+                                                        case "WARN":
+                                                            textColor = "text-warning";
+                                                            break;
+                                                        default:
+                                                            textColor = "text-danger";
+                                                    }
+
+                                                    // render line
                                                     return (<tr key={idx}>
-                                                        <td className='text-white font-monospace text-nowrap' title={"Timestamp: " + logEvent.timeStamp}>{moment(logEvent.timeStamp).format("YYYY-MM-DD HH:mm:ss.SSS")}</td>
-                                                        <td className='text-white font-monospace text-nowrap' title={"Log Level: " + logEvent.level}>{logEvent.level}</td>
-                                                        <td className='text-white font-monospace text-nowrap' title={"ThreadName: " + logEvent.threadName}>{logEvent.threadName}</td>
-                                                        <td className='text-white font-monospace text-nowrap' title={"LoggerName: " + logEvent.loggername}>{logEvent.loggerName.substring(logEvent.loggerName.lastIndexOf(".") + 1)}</td>
-                                                        <td className='text-white font-monospace text-truncate' style={{ maxWidth: '450px' }} title={"Message: " + logEvent.formattedMessage}>{logEvent.formattedMessage}</td>
+                                                        <td className={textColor + ' font-monospace text-nowrap'} title={"Timestamp: " + logEvent.timeStamp}>{moment(logEvent.timeStamp).format("YYYY-MM-DD HH:mm:ss.SSS")}</td>
+                                                        <td className={textColor + ' font-monospace text-nowrap'} title={"Log Level: " + logEvent.level}>{logEvent.level}</td>
+                                                        <td className={textColor + ' font-monospace text-nowrap'} title={"ThreadName: " + logEvent.threadName}>{logEvent.threadName}</td>
+                                                        <td className={textColor + ' font-monospace text-nowrap'} title={"LoggerName: " + logEvent.loggername}>{logEvent.loggerName.substring(logEvent.loggerName.lastIndexOf(".") + 1)}</td>
+                                                        <td className={textColor + ' font-monospace text-truncate'} style={{ maxWidth: '500px' }} title={"Message: " + logEvent.formattedMessage}>{logEvent.formattedMessage}</td>
                                                     </tr>)
                                                 })
                                             }

@@ -48,9 +48,9 @@ public class XJDFServiceImpl implements XJDFService {
                 int resX = Math.round(previewGenerationParams.getResolution().getX());
                 int resY = Math.round(previewGenerationParams.getResolution().getY());
 
-                // process preview generation
-                log.info("Generate Preview of job '{}'...", jobId);
+                log.info("Target resolution: {} dpi.", resX);
 
+                // process preview generation
                 byte[] preview = previewService.generatePreview(artwork, resX, resY);
                 URI uriPreview = new URI("preview.png");
 
@@ -74,8 +74,6 @@ public class XJDFServiceImpl implements XJDFService {
                                         .withQueueEntryID(queueEntryId)
                         )
                 );
-
-                log.info("Generation Preview of job '{}' completed.", jobId);
 
                 // create and return zip package
                 return new ZipPackage.Builder()

@@ -60,7 +60,7 @@ class AutomatedPreviewGenerationXJdf extends React.Component {
                                 Here is a demo XJDF Package: <a href="/#" onClick={this.handleGenerateAndDownloadDemo}>Generate & Download</a>
                             </p>
                             <p>
-                                This is the appropriate CLI Command to send an XJMF Package to the preview generation:
+                                This is the appropriate CLI Command to send an XJDF Pacakge to the preview generation. The target resolution is defined in the XJDF Document.
                             </p>
                             <div className='font-monospace border border-dark p-2 bg-secondary bg-opacity-25 rounded'>
                                 curl --data-binary @preview-demo.xjmf.zip -H "Content-Type: application/octet-stream" http://localhost:8080/v1/xjdf --output preview.xjmf.zip

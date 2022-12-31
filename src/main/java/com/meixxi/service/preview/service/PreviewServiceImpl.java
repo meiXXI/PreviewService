@@ -41,31 +41,4 @@ public class PreviewServiceImpl implements PreviewService {
         // return preview
         return result;
     }
-
-
-    public byte[] generatePreviewImageMagick(byte[] pdf, int resX, int resY) throws IOException, InterruptedException {
-        Path dir = Files.createTempDirectory("preview-generation");
-
-        Path pathPdf = dir.resolve("artwork.pdf");
-        Path pathPng = dir.resolve("preview.png");
-
-        Files.write(pathPdf, pdf);
-
-        ProcessBuilder pb = new ProcessBuilder("convert", "-density", resX + "x" + resY, "-alpha", "off", "-quality", "50", pathPdf.toString() + "[0]", pathPng.toString());
-
-        log.info("Start preview generation...");
-        long startTime = System.currentTimeMillis();
-
-        Process process = pb.start();
-        int response = process.waitFor();
-        log.info("Preview generation successful (duration: " + (System.currentTimeMillis() - startTime) + " ms). Response Code ImageMagick: " + response);
-
-        byte[] result = new FileInputStream(pathPng.toFile()).readAllBytes();
-
-        // clean up
-        Files.delete(dir);
-
-        // return preview
-        return result;
-    }
 }

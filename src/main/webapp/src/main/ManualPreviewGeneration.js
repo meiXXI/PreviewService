@@ -47,7 +47,7 @@ class ManualPreviewGeneration extends React.Component {
 
         fetch('/v1/preview', {
             method: 'POST',
-            body: formData,
+            body: formData
         })
             .then((response) => response.arrayBuffer())
             .then((bytes) => {

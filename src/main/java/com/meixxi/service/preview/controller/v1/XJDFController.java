@@ -24,9 +24,18 @@ public class XJDFController {
 
 	@RequestMapping(method = RequestMethod.POST, produces = "application/vnd.cip4-xjmf+zip")
 	public byte[] processXJdf(@RequestBody byte[] bytes) throws Exception {
-		log.info("A new XJDF Package has been received. Size: {}", DimensionUtil.bytes2readable(bytes.length));
+		long startTime = System.currentTimeMillis();
 
-		return xjdfService.processXJdfPackage(bytes);
+		log.info("XJDF Package received ({}).", DimensionUtil.bytes2readable(bytes.length));
+
+		byte[] xjdfPackage = xjdfService.processXJdfPackage(bytes);
+
+		log.info("XJDF Package completed ({}). {} ms.",
+				DimensionUtil.bytes2readable(xjdfPackage.length),
+				System.currentTimeMillis() - startTime
+		);
+
+		return xjdfPackage;
 	}
 
 	@RequestMapping(value = "/example", method = RequestMethod.GET, produces = "application/vnd.cip4-xjmf+zip")

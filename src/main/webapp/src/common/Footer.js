@@ -23,20 +23,17 @@ class Footer extends React.Component {
      * ReactJS: Method is invoked immediately after a component is mounted.
      */
     componentDidMount() {
-        // prevent second call
-        if (this.isCalled) {
-            return;
-        }
-        this.isCalled = true;
 
         // trigger continuous updates
         this.updateVersion();
 
-        var interval = setInterval(() => {
-            this.updateVersion();
-        }, 15000);
+        if (!this.interval && this.state.interval === null) {
+            this.interval = setInterval(() => {
+                this.updateVersion();
+            }, 3500);
 
-        this.setState({ interval: interval });
+            this.setState({ interval: this.interval });
+        }
     }
 
     /**
@@ -93,7 +90,7 @@ class Footer extends React.Component {
                                         PhD Candidate at TU Dublin
                                     </div>
                                     <div className="col text-end">
-                                        <small>{this.state.version ? <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small> : 'n. a.'} · webapp: v{packageJson.version}</small>
+                                        <small>{this.state.version ? <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small> : 'n. a.'} · client: v{packageJson.version}</small>
                                     </div>
                                 </div>
                             </div>

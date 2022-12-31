@@ -24,21 +24,33 @@ public class PreviewController {
 	@Autowired
 	private PreviewService previewService;
 
-	@PostMapping(value = "", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public @ResponseBody byte[] process(
 		@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException, InterruptedException {
+		return process(72, file.getBytes(), file.getOriginalFilename());
+	}
+
+	@PostMapping(value = "", consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.IMAGE_PNG_VALUE)
+	public @ResponseBody byte[] process(@RequestBody byte[] pdf) throws IOException, InterruptedException {
+		return process(72, pdf, null);
+	}
+
+	@PostMapping(value = "resolution/{resolution}", consumes = MediaType.APPLICATION_PDF_VALUE, produces = MediaType.IMAGE_PNG_VALUE)
+	public @ResponseBody byte[] process(@PathVariable float resolution, @RequestBody byte[] pdf, String filename) throws IOException, InterruptedException {
 		long startTime = System.currentTimeMillis();
 
-		log.info("File '{}' received - {}",
-				file.getOriginalFilename(),
-				DimensionUtil.bytes2readable(file.getSize())
+		log.info("'{}' received ({}). Target: {} dpi.",
+				filename == null ? "PDF" : filename,
+				DimensionUtil.bytes2readable(pdf.length),
+				resolution
 		);
 
-		byte[] preview = previewService.generatePreview(file.getBytes(), 72);
+		byte[] preview = previewService.generatePreview(pdf, resolution);
 
-		log.info("Preview '{}' completed - {} ({} ms)",
-				file.getOriginalFilename(),
+		log.info("'{}' preview completed ({}). {} dpi, {} ms.",
+				filename == null ? "PDF" : filename,
 				DimensionUtil.bytes2readable(preview.length),
+				resolution,
 				System.currentTimeMillis() - startTime
 		);
 

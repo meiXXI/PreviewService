@@ -22,22 +22,17 @@ class Header extends React.Component {
      * ReactJS: Method is invoked immediately after a component is mounted.
      */
     componentDidMount() {
-        // prevent second call
-        if (this.isCalled) {
-            return;
-        }
-        this.isCalled = true;
 
         // trigger continuous updates
         this.updateStatus();
 
-        if (this.state.interval === null) {
-            var interval = setInterval(() => {
+        if (!this.interval && this.state.interval === null) {
+            this.interval = setInterval(() => {
                 this.updateStatus();
             }, 2500);
-        }
 
-        this.setState({ interval: interval });
+            this.setState({ interval: this.interval });
+        }
     }
 
     /**

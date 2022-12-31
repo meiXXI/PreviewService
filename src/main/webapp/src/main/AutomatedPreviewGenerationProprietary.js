@@ -35,7 +35,13 @@ class AutomatedPreviewGenerationProprietary extends React.Component {
                                 This is the appropriate CLI Command to send an XJMF Package to the preview generation:
                             </p>
                             <div className='font-monospace border border-dark p-2 bg-secondary bg-opacity-25 rounded'>
-                                curl -i --data-binary "@tudublin.png" http://localhost:8080/v1/preview --output tudublin.png --insecure
+                                url --data-binary "@tudublin.pdf"  -H "Content-Type: application/pdf" http://localhost:8080/v1/preview --output tudublin-new.png
+                            </div>
+                            <p className='mt-3'>
+                                The following call allows to customize the resultion (here: 300 dpi). Feel free to change '300' in the url to any other value.
+                            </p>
+                            <div className='font-monospace border border-dark p-2 bg-secondary bg-opacity-25 rounded'>
+                                curl --data-binary "@tudublin.pdf"  -H "Content-Type: application/pdf" http://localhost:8080/v1/preview/resolution/300 --output tudublin-new.png
                             </div>
                         </div>
                     </div>
