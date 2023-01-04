@@ -27,3 +27,9 @@ jobs:
             --build-arg GITHUB_RUN_NUMBER=${GITHUB_RUN_NUMBER} \
             --build-arg GITHUB_ACTOR=${GITHUB_ACTOR} \
             .
+
+      - name: Publish Docker Image to github
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
+          docker push "ghcr.io/meixxi/preview-service:latest"
+          docker push "ghcr.io/meixxi/preview-service:2.0.${GITHUB_RUN_NUMBER}"
