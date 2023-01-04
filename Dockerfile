@@ -46,7 +46,7 @@ FROM alpine:3
 
 LABEL org.opencontainers.image.source=https://github.com/meixxi/preview-service
 LABEL org.opencontainers.image.description="Preview Generation Service"
-LABEL org.opencontainers.image.licenses=Apache License 2.0
+LABEL org.opencontainers.image.licenses="Apache License 2.0"
 
 ARG GITHUB_RUN_ID
 ARG GITHUB_RUN_NUMBER
