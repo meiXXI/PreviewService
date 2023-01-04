@@ -13,6 +13,8 @@ RUN yarn build
 # build java application
 FROM eclipse-temurin:17-alpine as java-build
 
+ARG VERSION=0.0.0
+
 RUN addgroup -S meixxi && adduser -S meixxi -G meixxi
 
 RUN mkdir -p /work/.gradle && chown -R meixxi:meixxi /work
