@@ -10,8 +10,43 @@ RUN yarn install
 RUN yarn version --new-version ${VERSION}
 RUN yarn build
 
-# create base image
-FROM amazoncorretto:17 AS base
+# build java application
+FROM eclipse-temurin:17-alpine as java-build
+
+RUN addgroup -S meixxi && adduser -S meixxi -G meixxi
+
+RUN mkdir -p /work/.gradle && chown -R meixxi:meixxi /work
+
+COPY --chown=meixxi:meixxi ["src", "/work/src"]
+COPY --chown=meixxi:meixxi ["gradle", "/work/gradle"]
+COPY --chown=meixxi:meixxi ["gradlew", "build.gradle", "settings.gradle", "/work/"]
+
+COPY --chown=meixxi:meixxi --from=webapp-builder ["/home/node/app/build", "/work/src/main/resources/static"]
+
+USER meixxi
+
+WORKDIR /work
+
+RUN ./gradlew -i build -PprojectVersion=${VERSION} --no-daemon
+RUN rm /work/build/libs/*-plain.jar
+
+# build JRE
+FROM java-build as jre-build
+
+ RUN jlink --verbose \
+         --add-modules ALL-MODULE-PATH \
+         --compress 2 \
+         --strip-java-debug-attributes \
+         --no-header-files \
+         --no-man-pages \
+         --output /work/jre
+
+# create final image
+FROM alpine:3
+
+LABEL org.opencontainers.image.source=https://github.com/meixxi/preview-service
+LABEL org.opencontainers.image.description="Preview Generation Service"
+LABEL org.opencontainers.image.licenses="Apache License 2.0"
 
 ARG GITHUB_RUN_ID
 ARG GITHUB_RUN_NUMBER
@@ -31,43 +66,18 @@ ENV VERSION=${VERSION}
 ENV LANG=en_US.utf-8
 ENV LC_ALL=en_US.UTF-8
 
-RUN yum -y install ImageMagick shadow-utils.x86_64 \
-    && yum clean all \
-    && rm -rf /var/cache/yum
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH "${JAVA_HOME}/bin:${PATH}"
 
-RUN groupadd -g 1000 meixxi && useradd -u 1000 -g meixxi -s /bin/sh meixxi
+COPY --from=jre-build /work/jre $JAVA_HOME
 
-# compile and test
-FROM base AS java-builder
+RUN addgroup -S meixxi && adduser -S meixxi -G meixxi
 
-RUN mkdir -p /work/.gradle && chown -R meixxi:meixxi /work
-
-COPY --chown=meixxi:meixxi ["src", "/work/src"]
-COPY --chown=meixxi:meixxi ["gradle", "/work/gradle"]
-COPY --chown=meixxi:meixxi ["gradlew", "build.gradle", "settings.gradle", "/work/"]
-
-COPY --chown=meixxi:meixxi --from=webapp-builder ["/home/node/app/build", "/work/src/main/resources/static"]
+RUN mkdir -p /opt/app && chown -R meixxi:meixxi /opt/app
+COPY --from=java-build --chown=meixxi:meixxi ["/work/build/libs/*.jar", "/opt/app/preview-service.jar"]
 
 USER meixxi
 
-WORKDIR /work
-
-ARG VERSION=0.0.0
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-ARG AWS_SESSION_TOKEN
-
-RUN ./gradlew -i build -PprojectVersion=${VERSION} --no-daemon
-RUN rm /work/build/libs/*-plain.jar
-
-# create final image
-FROM base
-
-RUN mkdir -p /app/data && chown -R meixxi:meixxi /app
-COPY --from=java-builder --chown=meixxi:meixxi ["/work/build/libs/*.jar", "/app/preview-service.jar"]
-
-USER meixxi
-
-ENTRYPOINT ["java", "-Xmx4g", "-jar", "/app/preview-service.jar"]
+ENTRYPOINT ["java", "-Xmx4g", "-jar", "/opt/app/preview-service.jar"]
 
 EXPOSE 8080

@@ -9,16 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static org.mockito.ArgumentMatchers.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -48,15 +46,14 @@ public class XJDFServiceImplTest {
 		// arrange
 		byte[] preview = "preview".getBytes();
 		byte[] pgk = XJDFServiceImplTest.class.getResourceAsStream("/com/meixxi/service/preview/service/preview.xjmf.zip").readAllBytes();
-		byte[] artwork = XJDFServiceImplTest.class.getResourceAsStream("/com/meixxi/service/preview/service/file-1.pdf").readAllBytes();
 
-		Mockito.doReturn(preview).when(previewServiceMock).generatePreview(artwork, 72, 72);
+		Mockito.doReturn(preview).when(previewServiceMock).generatePreview(any(byte[].class), eq(72f), eq(72f));
 
 		// act
 		byte[] result = xjdfService.processXJdfPackage(pgk);
 
 		// assert
-		Mockito.verify(previewServiceMock, Mockito.only()).generatePreview(artwork, 72, 72);
+		Mockito.verify(previewServiceMock, Mockito.only()).generatePreview(any(byte[].class), eq(72f), eq(72f));
 
 		System.out.println(result.length);
 		assertTrue(result.length > 1000, "Result is 300,000 Bytes");
@@ -66,7 +63,7 @@ public class XJDFServiceImplTest {
 
 		assertTrue(files.containsKey("preview.png"), "Preview File is missing");
 		assertTrue(files.containsKey("root.xjmf"), "XJMF File is missing");
-		assertTrue(files.containsKey("response.xjmf"), "XJDF Document is missing");
+		assertTrue(files.containsKey("response.xjdf"), "XJDF Document is missing");
 	}
 
 	@Test
