@@ -19,6 +19,7 @@ jobs:
         run: |-
           docker build \
             -t "ghcr.io/meixxi/preview-service:latest" \
+            -t "ghcr.io/meixxi/preview-service:2.0.${GITHUB_RUN_NUMBER}" \
             --build-arg VERSION=0.0.${GITHUB_RUN_NUMBER} \
             --build-arg GITHUB_SHA=${GITHUB_SHA} \
             --build-arg GITHUB_SHORT_SHA=${GITHUB_SHA:0:8} \

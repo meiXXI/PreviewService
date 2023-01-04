@@ -12,10 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to github docker registry
-        run: |- 
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
-
       - name: Check out sources...
         uses: actions/checkout@v2
 
@@ -32,5 +28,6 @@ jobs:
             .
 
       - name: Publish Docker Image to github
-        run: |-
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
           docker push "ghcr.io/meixxi/preview-service:edge"
