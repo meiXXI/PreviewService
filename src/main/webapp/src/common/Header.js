@@ -64,6 +64,17 @@ class Header extends React.Component {
             });
     }
 
+    /**
+     * Shut down the current service.
+     */
+    shutdownService() {
+        fetch("/system/shutdown",
+            {method: 'POST'}
+        )
+            .then(response => {
+                alert("System is shut down...");
+            })
+    }
 
     /**
      * Return HTML snippet
@@ -87,16 +98,22 @@ class Header extends React.Component {
                             <div className="offcanvas-body">
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
                                     <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="https://github.com/meixxi/preview-service">Project Sources <small><i>(github.com)</i></small></a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="https://www.linkedin.com/in/meiXXI">About the Author <small><i>(linkedin.com)</i></small></a>
+                                        <button type="button" class="btn btn-link nav-link" onClick={this.shutdownService}>Shutdown Service</button>
                                     </li>
                                     <li className="nav-item">
                                         &nbsp;
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="https://www.tudublin.ie">TU Dublin</a>
+                                        <a className="nav-link" aria-current="page" href="https://github.com/meixxi/preview-service">Project Sources <small><i>(github.com)</i></small></a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" aria-current="page" href="https://www.linkedin.com/in/meiXXI">About the Author <small><i>(linkedin.com)</i></small></a>
+                                    </li>
+                                    <li className="nav-item">
+                                        &nbsp;
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" aria-current="page" href="https://www.tudublin.ie">TU Dublin</a>
                                     </li>
                                 </ul>
                             </div>
