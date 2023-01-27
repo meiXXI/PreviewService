@@ -48,3 +48,4 @@ jobs:
       - name: Publish Docker Image to Google Cloud Platform
         run: |
           docker tag "ghcr.io/meixxi/preview-service:2.0.${GITHUB_RUN_NUMBER}" "europe-west3-docker.pkg.dev/meixxi/main/preview-service:2.0.${GITHUB_RUN_NUMBER}"
+          docker push "europe-west3-docker.pkg.dev/meixxi/main/preview-service:2.0.${GITHUB_RUN_NUMBER}"
