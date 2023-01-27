@@ -5,6 +5,8 @@ import com.meixxi.service.preview.util.TimeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +21,15 @@ public class SystemController {
 	private static final Logger log = LoggerFactory.getLogger(SystemController.class);
 
 	@Autowired
+	private ApplicationContext context;
+
+	@Autowired
 	private AboutService aboutService;
+
+	@RequestMapping(value = "/system/shutdown", method = RequestMethod.POST)
+	public void shutdown() {
+		((ConfigurableApplicationContext) context).close();
+	}
 
 	@RequestMapping(value = "/version", method = RequestMethod.GET, produces= MediaType.APPLICATION_JSON_VALUE)
 	public Version version() {

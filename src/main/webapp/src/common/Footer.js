@@ -90,7 +90,7 @@ class Footer extends React.Component {
                                         PhD Candidate at TU Dublin
                                     </div>
                                     <div className="col text-end">
-                                        <small>{this.state.version ? <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small> : 'n. a.'} · client: v{packageJson.version}</small>
+                                        <small>{this.state.version ? <small>v{this.state.version.version}<span className='d-none d-md-inline'>-{this.state.version.commitId}</span> · ({this.state.version.buildTime})</small> : 'n. a.'} · webapp: v{packageJson.version}</small>
                                     </div>
                                 </div>
                             </div>
