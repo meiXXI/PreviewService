@@ -33,3 +33,18 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u USERNAME --password-stdin
           docker push "ghcr.io/meixxi/preview-service:latest"
           docker push "ghcr.io/meixxi/preview-service:2.0.${GITHUB_RUN_NUMBER}"
+
+      - name: Authentication Google Cloud Platform
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Set up Google Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: Docker Auth Google Cloud Platform
+        run: gcloud auth configure-docker europe-west3-docker.pkg.dev
+
+      - name: Publish Docker Image to Google Cloud Platform
+        run: |
+          docker tag "ghcr.io/meixxi/preview-service:2.0.${GITHUB_RUN_NUMBER}" "europe-west3-docker.pkg.dev/meixxi/main/preview-service:2.0.${GITHUB_RUN_NUMBER}"
